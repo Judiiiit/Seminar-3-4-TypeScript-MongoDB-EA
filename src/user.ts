@@ -1,19 +1,18 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 
-// 1. Create an interface representing a TS object.
 export interface IUser {
+  _id?: string;
   name: string;
   email: string;
-  avatar?: string;
-  _id?: string;
+  role: 'ADMIN' | 'EDITOR' | 'USER';
+  organization: Types.ObjectId; // Referència forta a l'altra col·lecció
 }
 
-// 2. Create a Schema corresponding to the document in MongoDB.
 const userSchema = new Schema<IUser>({
   name: { type: String, required: true },
-  email: { type: String, required: true },
-  avatar: String
+  email: { type: String, required: true, unique: true },
+  role: { type: String, enum: ['ADMIN', 'EDITOR', 'USER'], default: 'USER' },
+  organization: { type: Schema.Types.ObjectId, ref: 'Organization', required: true }
 });
 
-// 3. Create a Model.
-export const UserModel = model('User', userSchema);
+export const UserModel = model<IUser>('User', userSchema);
