@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { UserModel, IUser } from './user.js';
 import { OrganizationModel, IOrganization } from './organization.js';
+import { TaskModel, ITask } from './task.js';
 
 async function runDemo() {
   try {
@@ -13,6 +14,7 @@ async function runDemo() {
     console.log('🧹 Cleaning database...');
     await UserModel.deleteMany({});
     await OrganizationModel.deleteMany({});
+    await TaskModel.deleteMany({});
 
     // --- 3. SEEDING (The missing part) ---
     console.log('🌱 Seeding data...');
@@ -97,6 +99,54 @@ async function runDemo() {
     ]);
 
     console.table(stats);
+
+
+
+    // =========================
+    // EXERCICI: CRUD DEL MODEL AFEGIT (TASK)
+    // =========================
+
+    console.log('\n TASK CRUD (relacionat amb User):');
+
+    // 1) CREATE
+    const createdTask = await TaskModel.create({
+      title: 'Avançar el projecte de EA',
+      completed: false,
+      user: users[0]._id // User: Bill
+    });
+    console.log('Tasca creada:', createdTask.toObject());
+
+    const createdTask2 = await TaskModel.create({
+      title: 'Millorar seminari EA',
+      completed: false,
+      user: users[1]._id // User: Peter
+    });
+    console.log('Tasca creada:', createdTask2.toObject());
+
+    // 2) GET BY ID + POPULATE
+    const taskWithUser = await TaskModel.findById(createdTask._id)
+      .populate('user')
+      .lean();
+    console.log('getById + populate:', taskWithUser);
+
+    // 3) UPDATE
+    const updatedTask = await TaskModel.findByIdAndUpdate(
+      createdTask._id,
+      { completed: true },
+      { new: true } // Return the updated document
+    )
+      .populate('user')
+      .lean();
+    console.log('Updated task:', updatedTask);
+
+    // 5) LIST ALL (utilitzant .lean)
+    const allTasks = await TaskModel.find().lean();
+    console.log('listAll (lean):', allTasks);
+
+    // 4) DELETE
+    //const deletedTask = await TaskModel.findByIdAndDelete(createdTask._id).lean();
+    //console.log('Deleted task:', deletedTask);
+
 
   } catch (err) {
     console.error('❌ Error:', err);
