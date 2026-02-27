@@ -144,8 +144,8 @@ async function runDemo() {
     console.log('listAll (lean):', allTasks);
 
     // 4) DELETE
-    //const deletedTask = await TaskModel.findByIdAndDelete(createdTask._id).lean();
-    //console.log('Deleted task:', deletedTask);
+    const deletedTask = await TaskModel.findByIdAndDelete(createdTask._id).lean();
+    console.log('Deleted task:', deletedTask);
 
 
   } catch (err) {
