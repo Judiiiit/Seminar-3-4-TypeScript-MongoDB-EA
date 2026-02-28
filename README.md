@@ -1,5 +1,9 @@
 # EA Node.js + TypeScript + Mongoose
 
+## Documentación
+
+Se ha usado los conocimientos adquiridos en clase y en los ejemplos proporcionado en el código del repo. También el enlace de explicación del populate: https://mongoosejs.com/docs/populate.html
+
 ## Requisitos Previos
 
 Asegúrate de tener instalados los siguientes programas en tu sistema:
